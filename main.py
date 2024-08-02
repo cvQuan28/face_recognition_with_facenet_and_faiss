@@ -1,21 +1,37 @@
-import torch
-from torchvision import datasets, transforms
-from model.pytorch_facenet import InceptionResnetV1
+import glob
 import cv2
 from PIL import Image
+import faiss
+import pickle
+from src.emb import FaceNet
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = InceptionResnetV1(pretrained='vggface2', classify=False).to(device)
-model.eval()
+import os
 
-data_transforms = transforms.Compose([
-    transforms.Resize((160, 160)),
-    transforms.ToTensor()
-])
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-img = cv2.imread(r"E:\Data\Faces\V1092470\V1092470_120.jpg")
-img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-img = data_transforms(img).unsqueeze(0).to(device)
+model = FaceNet()
 
-with torch.no_grad():
-    emb_img = model(img).to(device)
+# Tải chỉ mục Faiss và tên từ file
+index = faiss.read_index("faiss_index.index")
+with open("data/face_names.pkl", "rb") as f:
+    known_face_names = pickle.load(f)
+
+
+# Hàm nhận diện khuôn mặt
+def recognize_face(image_path):
+    img = Image.open(image_path)
+    emb_img = model.get_embedding(img)
+    distances, indices = index.search(emb_img, 3)
+    if distances[0][0] < 0.7:  # Ngưỡng để xác định sự tương đồng, có thể điều chỉnh
+        match_index = indices[0][0]
+        return known_face_names[match_index]
+
+    print(f"Anh khong nhan dang duoc: {image_path}")
+    return "Không tìm thấy kết quả"
+
+
+# Ví dụ sử dụng
+dir_image = r"E:\Data\Faces\V1092473"
+list_image_paths = glob.glob(os.path.join(dir_image, "*.jpg"))
+for img_path in list_image_paths:
+    print(f"Kết quả nhận diện: {recognize_face(img_path)}")
