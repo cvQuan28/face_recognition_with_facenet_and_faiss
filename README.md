@@ -1,6 +1,7 @@
 # Face Recognition with FaceNet and Faiss
 
 This project presents a facial recognition system that uses `facenet` for face encoding and the `faiss` library for efficient similarity search. The system allows adding new faces without reprocessing the entire dataset, making the system scalable and efficient, and only requires 1 image per class.
+Use `yolo v8` for face detection.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -16,7 +17,7 @@ This project implements a face recognition system that uses Faiss (Facebook AI S
 
 ## Features
 - **Efficient Similarity Search**: Utilizes Faiss for fast and scalable vector search.
-- **Face Detection and Encoding**: Uses FaceNet for reliable face detection and feature extraction.
+- **Face Detection and Encoding**: Uses Yolo V8 for reliable face detection and FaceNet for feature extraction.
 - **Incremental Updates**: Allows adding new faces without reprocessing the entire dataset.
 - **Minimal Data Requirement**: Requires only one image per class for training.
 
