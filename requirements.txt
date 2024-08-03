@@ -1,0 +1,11 @@
+autofaiss
+faiss_cpu
+numpy
+onnxruntime
+opencv_python
+Pillow
+Requests
+torch
+torchvision
+tqdm
+ultralytics
