@@ -8,9 +8,19 @@ import torchvision
 from src.emb import FaceNet
 import logging
 import json
+import argparse
 
 # logging
 logging.basicConfig(level=logging.INFO)
+
+
+def make_parser():
+    parser = argparse.ArgumentParser()
+    # camera
+    parser.add_argument("--data_dir", action="store", type=str, default=None)
+    parser.add_argument("--save_dir", action="store_true", type=str, default=None)
+    parser.add_argument("--task", action="store_true", type=str, default=None)
+    return parser
 
 
 class PrepareDataset:
@@ -119,12 +129,12 @@ class PrepareDataset:
 
 
 if __name__ == "__main__":
-    from src.ObjectDetection.ObjectDetection import Yolo_V8_Detection
-
+    args = make_parser().parse_args()
     dataset = PrepareDataset()
-    # dataset.prepare_data_from_dir(r"E:\Data\Faces\train", FaceNet(), r"D:\QDev\face_recognition\data")
-    dataset.add_a_new_face(data_dir=r"E:\Data\new_face", emb_model=FaceNet(),
-                           face_names_path=r'D:\QDev\face_recognition\data\face_names.pkl',
-                           faiss_index_path=r'D:\QDev\face_recognition\data\faiss_index.index')
-    # model = Yolo_V8_Detection(r"D:\QDev\face_recognition\data\Y8_Face_Detection.onnx", method=2)
-    # dataset.extract_faces_from_video(0, r"E:\Data\new_face", model, "Hieu")
+
+    if args.task == "init":
+        dataset.prepare_data_from_dir(args.data_dir, FaceNet(), args.save_dir)
+    else:
+        dataset.add_a_new_face(data_dir=args.data_dir, emb_model=FaceNet(),
+                               face_names_path='data/face_names.pkl',
+                               faiss_index_path='data/faiss_index.index')

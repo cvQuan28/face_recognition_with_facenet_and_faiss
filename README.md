@@ -61,9 +61,6 @@ python src/prepare_dataset.py --data_dir data_dir --save_dir data --task "init"
 
 This script will generate the face encodings for each face in the dataset and save them to a file. Including: save faces encoding to data/faiss_index.index and save list names to data/face_names.pkl.
 
-
-**_Link file tran.rar contains image dataset:_** https://drive.google.com/file/d/1qDpGJxh7TysfcnV3jCoQNTNuxghZWPL2/view?usp=sharing
-
 ### Adding New Faces
 
 To add a new face to the system, use the provided scripts to load the existing Faiss index and names, generate the face encoding for the new image, and update the index and names list accordingly.
